@@ -1,0 +1,23 @@
+{
+  "name": "justwatch",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "main": "ts-node ./src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@notionhq/client": "^0.2.2",
+    "justwatch-api": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "^16.3.1",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  }
+}
