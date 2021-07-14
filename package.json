@@ -7,12 +7,15 @@
   "scripts": {
     "main": "ts-node ./src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prebuild": "rm -rf dist",
     "build": "tsc"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@notionhq/client": "^0.2.2",
+    "class-validator": "^0.13.1",
+    "dotenv": "^10.0.0",
     "justwatch-api": "^1.0.7"
   },
   "devDependencies": {
