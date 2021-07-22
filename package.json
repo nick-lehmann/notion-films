@@ -26,7 +26,6 @@
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dotenv": "^10.0.0",
-    "forever": "^4.0.1",
     "justwatch-api": "^1.0.7",
     "node-cron": "^3.0.0",
     "reflect-metadata": "^0.1.13"
