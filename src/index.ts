@@ -1,7 +1,9 @@
+import 'reflect-metadata'
 import { JustWatchWrapper } from './justwatch.js'
 import { Client } from '@notionhq/client'
 import { getPropertyText, getWorkPages, validateDatabase } from './notion.js'
 import { Config } from './config.js'
+import cron from 'node-cron'
 
 const config = Config.fromEnv()
 console.log(config)
@@ -27,6 +29,7 @@ export async function sync(
   })
 
   const pages = getWorkPages(pagesResponse.results, config)
+  if (pages.length === 0) return
 
   console.log('# FILMS')
   for (const page of pages) {
@@ -54,9 +57,16 @@ export async function sync(
       archived: false,
     })
 
-    console.log('New page properties')
-    console.log(updatedPage.properties)
+    // console.log('New page properties')
+    // console.log(updatedPage.properties)
   }
 }
 
-await sync(notion, justWatch)
+if (config.ENABLE_CRON) {
+  cron.schedule(config.CRON_EXPRESSION, () => {
+    console.log(`Synching ${new Date()}`)
+    sync(notion, justWatch)
+  })
+} else {
+  sync(notion, justWatch)
+}

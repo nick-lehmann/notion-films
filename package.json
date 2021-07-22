@@ -22,10 +22,14 @@
   "license": "ISC",
   "dependencies": {
     "@notionhq/client": "^0.2.2",
+    "@types/node-cron": "^2.0.4",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dotenv": "^10.0.0",
-    "justwatch-api": "^1.0.7"
+    "forever": "^4.0.1",
+    "justwatch-api": "^1.0.7",
+    "node-cron": "^3.0.0",
+    "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@types/node": "^16.3.1",

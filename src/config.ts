@@ -1,10 +1,5 @@
 import { Expose, plainToClass } from 'class-transformer'
-import {
-  IsString,
-  ValidationError,
-  validateSync,
-  IsOptional,
-} from 'class-validator'
+import { IsString, validateSync, IsOptional, IsBoolean } from 'class-validator'
 import dotenv from 'dotenv'
 
 // List of numbers, separated by a comma
@@ -20,6 +15,9 @@ export class Config {
   // TODO: Better validation
   @Expose() @IsString() JUSTWATCH_PROVIDERS!: CommaSeparatedNumberList
 
+  @Expose() @IsBoolean() ENABLE_CRON = true
+  @Expose() @IsString() CRON_EXPRESSION = '*/5 * * * * *'
+
   constructor(init: Config) {
     Object.assign(this, init)
   }
@@ -30,6 +28,7 @@ export class Config {
     const config = plainToClass(Config, process.env, {
       excludeExtraneousValues: true,
       exposeDefaultValues: true,
+      enableImplicitConversion: true,
     })
     const errors = validateSync(this)
     if (errors.length > 0) {
