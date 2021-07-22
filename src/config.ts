@@ -1,10 +1,11 @@
 import { Expose, plainToClass } from 'class-transformer'
-import { IsString, validateSync, IsOptional, IsBoolean } from 'class-validator'
 import dotenv from 'dotenv'
-
-// List of numbers, separated by a comma
-// e.g. 1,4,5,10
-type CommaSeparatedNumberList = string
+import { IsString, validateSync, IsOptional, IsBoolean } from 'class-validator'
+import {
+  CommaSeparatedNumberList,
+  IsJustWatchProviders,
+  ToBoolean,
+} from './helpers/index.js'
 
 export class Config {
   @Expose() @IsString() NOTION_TOKEN!: string
@@ -12,10 +13,12 @@ export class Config {
   @Expose() @IsString() DATABASE_TITLE_PROPERTY_NAME!: string
   @Expose() @IsString() DATABASE_JUSTWATCH_PROPERTY_NAME!: string
   @Expose() @IsString() @IsOptional() NOTHING_FOUND_MARKER = '-'
-  // TODO: Better validation
-  @Expose() @IsString() JUSTWATCH_PROVIDERS!: CommaSeparatedNumberList
 
-  @Expose() @IsBoolean() ENABLE_CRON = true
+  @Expose()
+  @IsJustWatchProviders()
+  JUSTWATCH_PROVIDERS!: CommaSeparatedNumberList
+
+  @Expose() @ToBoolean() @IsBoolean() ENABLE_CRON = true
   @Expose() @IsString() CRON_EXPRESSION = '*/5 * * * * *'
 
   constructor(init: Config) {
@@ -28,14 +31,15 @@ export class Config {
     const config = plainToClass(Config, process.env, {
       excludeExtraneousValues: true,
       exposeDefaultValues: true,
-      enableImplicitConversion: true,
     })
-    const errors = validateSync(this)
+
+    const errors = validateSync(config)
+
     if (errors.length > 0) {
-      console.error('Found the following errors')
-      for (const error of errors) console.error(error)
+      for (const error of errors) console.error(error.toString())
       process.exit(1)
     }
+
     return config
   }
 

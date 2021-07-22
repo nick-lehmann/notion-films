@@ -7,7 +7,7 @@ import JustWatch, {
   SearchResults,
   Title,
 } from 'justwatch-api'
-import { JSONCache } from './cache.js'
+import { JSONCache } from './helpers/cache.js'
 
 type ProviderMap = Record<number, Provider>
 
@@ -69,8 +69,7 @@ export class JustWatchWrapper {
   async getTitle(id: number, type = 'movie'): Promise<Title> {
     let item = this.itemCache.get(id)
     if (!item) {
-      //@ts-ignore
-      item = await this.api.getTitle(type, id)
+      item = await this.api.getTitle(type as any, id)
       this.itemCache.save(item)
     }
 
