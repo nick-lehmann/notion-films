@@ -1,4 +1,5 @@
 import { Client } from '@notionhq/client/build/src'
+import { DatabasesRetrieveResponse } from '@notionhq/client/build/src/api-endpoints'
 import { Page } from '@notionhq/client/build/src/api-types'
 import { Config } from './config.js'
 
@@ -32,9 +33,15 @@ export async function validateDatabase(
   notion: Client,
   config: Config,
 ): Promise<void> {
-  const database = await notion.databases.retrieve({
-    database_id: config.NOTION_DATABASE_ID,
-  })
+  let database: DatabasesRetrieveResponse
+  try {
+    database = await notion.databases.retrieve({
+      database_id: config.NOTION_DATABASE_ID,
+    })
+  } catch (error) {
+    console.error(error)
+    process.exit(1)
+  }
 
   const justWatchPropertyIsURL =
     database.properties[config.DATABASE_JUSTWATCH_PROPERTY_NAME].type == 'url'
