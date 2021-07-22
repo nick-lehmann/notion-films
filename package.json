@@ -11,7 +11,8 @@
     "main": "ts-node ./src/index.ts",
     "prebuild": "rm -rf dist",
     "build": "tsc",
-    "build:docker": "docker build -t notion-films ."
+    "build:docker": "docker build -t notion-films .",
+    "publish:docker": "docker tag notion-films ghcr.io/nick-lehmann/notion-films && docker push ghcr.io/nick-lehmann/notion-films"
   },
   "eslintConfig": {
     "root": true,

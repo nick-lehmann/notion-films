@@ -12,6 +12,8 @@ RUN ls && npm run build
 
 FROM node:16-alpine
 
+LABEL org.opencontainers.image.source = "https://github.com/nick-lehmann/notion-films"
+
 WORKDIR /app
 
 COPY package.json package-lock.json ./
