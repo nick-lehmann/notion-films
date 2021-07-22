@@ -1,38 +1,48 @@
+import { Expose, plainToClass } from 'class-transformer'
 import {
   IsString,
   ValidationError,
   validateSync,
   IsOptional,
-} from "class-validator";
-import dotenv from "dotenv";
+} from 'class-validator'
+import dotenv from 'dotenv'
 
 // List of numbers, separated by a comma
 // e.g. 1,4,5,10
-type NumberCommaSeparatedList = string;
+type CommaSeparatedNumberList = string
 
 export class Config {
-  @IsString() NOTION_TOKEN!: string;
-  @IsString() NOTION_DATABASE_ID!: string;
-  @IsString() DATABASE_TITLE_PROPERTY_NAME!: string;
-  @IsString() DATABASE_JUSTWATCH_PROPERTY_NAME!: string;
-  @IsString() @IsOptional() NOTHING_FOUND_MARKER: string = "-";
+  @Expose() @IsString() NOTION_TOKEN!: string
+  @Expose() @IsString() NOTION_DATABASE_ID!: string
+  @Expose() @IsString() DATABASE_TITLE_PROPERTY_NAME!: string
+  @Expose() @IsString() DATABASE_JUSTWATCH_PROPERTY_NAME!: string
+  @Expose() @IsString() @IsOptional() NOTHING_FOUND_MARKER = '-'
   // TODO: Better validation
-  @IsString() JUSTWATCH_PROVIDERS!: NumberCommaSeparatedList;
+  @Expose() @IsString() JUSTWATCH_PROVIDERS!: CommaSeparatedNumberList
 
   constructor(init: Config) {
-    Object.assign(this, init);
+    Object.assign(this, init)
   }
 
   static fromEnv(): Config {
-    dotenv.config();
+    dotenv.config()
 
-    const config = new Config(process.env as any);
-    const errors = validateSync(this);
+    const config = plainToClass(Config, process.env, {
+      excludeExtraneousValues: true,
+      exposeDefaultValues: true,
+    })
+    const errors = validateSync(this)
     if (errors.length > 0) {
-      console.error("Found the following errors");
-      for (const error of errors) console.error(error);
-      process.exit(1);
+      console.error('Found the following errors')
+      for (const error of errors) console.error(error)
+      process.exit(1)
     }
-    return config;
+    return config
+  }
+
+  get providers(): number[] {
+    return this.JUSTWATCH_PROVIDERS.split(',').map((number) =>
+      Number.parseInt(number),
+    )
   }
 }
