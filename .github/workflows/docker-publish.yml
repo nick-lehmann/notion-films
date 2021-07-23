@@ -55,19 +55,11 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }},${{ env.GITHUB_SHA }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - uses: azure/k8s-set-context@v1
-        id: setcontext
-        with:
-          method: kubeconfig
-          kubeconfig: ${{ secrets.KUBECONFIG }}
-          context: films
-
-      - name: Simple deploy to Kubernetes cluster
-        uses: Jtalk/k8s-deploy@v2
-        with:
-          namespace: films
-          manifests: |
-            deploy/deployment.yaml
+      - name: Deploy to cluster
+        uses: steebchen/kubectl@v2.0.0
+        with: # defaults to latest kubectl binary version
+          config: ${{ secrets.KUBECONFIG }}
+          command: set image --record deployment/films notion-films=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.GITHUB_SHA }}
