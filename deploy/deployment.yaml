@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: films
+  name: films
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: films
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: films
+    spec:
+      imagePullSecrets:
+        - name: github-pull-secrets
+      containers:
+        - image: ghcr.io/nick-lehmann/notion-films:main
+          name: notion-films
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: notion-api-token
+            - secretRef:
+                name: notion-films-database
+            - secretRef:
+                name: films
+          resources:
+            requests:
+              memory: '64Mi'
+              cpu: '250m'
+            limits:
+              memory: '128Mi'
+              cpu: '500m'
