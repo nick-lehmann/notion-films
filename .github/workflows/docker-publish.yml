@@ -49,6 +49,9 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: type=sha,enable=true,priority=100,prefix=sha-,suffix=,format=short
 
+      - name: Echo tags
+        run: 'echo "Tags for docker image: ${{steps.meta.outputs.tags}}"'
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
