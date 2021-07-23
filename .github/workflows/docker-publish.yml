@@ -68,5 +68,6 @@ jobs:
       - name: Simple deploy to Kubernetes cluster
         uses: Jtalk/k8s-deploy@v2
         with:
+          namespace: films
           manifests: |
             deploy/deployment.yaml
