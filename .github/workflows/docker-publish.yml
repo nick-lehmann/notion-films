@@ -57,3 +57,16 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - uses: azure/k8s-set-context@v1
+        id: setcontext
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBECONFIG }}
+          context: films
+
+      - name: Simple deploy to Kubernetes cluster
+        uses: Jtalk/k8s-deploy@v2
+        with:
+          manifests: |
+            deploy/deployment.yaml
