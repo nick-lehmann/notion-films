@@ -66,4 +66,4 @@ jobs:
         uses: steebchen/kubectl@v2.0.0
         with: # defaults to latest kubectl binary version
           config: ${{ secrets.KUBECONFIG }}
-          command: set image --record deployment/films notion-films=ghcr.io/nick-lehmann/sha-${{ env.GITHUB_SHA }}
+          command: set image --record deployment/films notion-films=${{steps.meta.outputs.tags}}
