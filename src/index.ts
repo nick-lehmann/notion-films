@@ -5,6 +5,14 @@ import { getPropertyText, getWorkPages, validateDatabase } from './notion.js'
 import { Config } from './config.js'
 import cron from 'node-cron'
 
+import JustWatch from 'justwatch-api'
+const api = new JustWatch()
+
+const response = await api.getPerson(1)
+console.log(response)
+
+process.exit(0)
+
 const config = Config.fromEnv()
 console.log(config)
 
